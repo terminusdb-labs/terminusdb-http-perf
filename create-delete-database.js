@@ -2,7 +2,8 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 export default function () {
-  const databaseName = `database-${__VU}-${__ITER}`;
+  const rand = Math.random().toString(36);
+  const databaseName = `database-${__VU}-${__ITER}-${rand}`;
   const body = { comment: 'New database', label: databaseName };
   const params = { headers: { 'Content-Type': 'application/json' } };
 
