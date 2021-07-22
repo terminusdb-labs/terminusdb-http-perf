@@ -1,4 +1,4 @@
-// Database delete response time.
+// Database delete
 //
 // Look at { scenario:default } under `http_req_duration`.
 
@@ -31,7 +31,10 @@ export function setup() {
   for (let iter = 0; iter < (options.iterations || 1); iter++) {
     const databaseName = databaseNameOfIter(data, iter);
     const url = `http://admin:root@127.0.0.1:6363/api/db/admin/${databaseName}`;
-    const body = JSON.stringify({ comment: 'comment', label: databaseName });
+    const body = JSON.stringify({
+      comment: 'comment',
+      label: databaseName,
+    });
     http.post(url, body, params).status === 200 ||
       fail(`could not create: ${databaseName}`);
   }

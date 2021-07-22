@@ -1,4 +1,5 @@
-// Database create response time.
+// Database create
+// * Use default parameters
 //
 // Look at { scenario:default } under `http_req_duration`.
 
@@ -33,7 +34,10 @@ const params = { headers: { 'Content-Type': 'application/json' } };
 export default function (data) {
   const databaseName = databaseNameOfIter(data, __ITER);
   const url = `http://admin:root@127.0.0.1:6363/api/db/admin/${databaseName}`;
-  const body = JSON.stringify({ comment: 'comment', label: databaseName });
+  const body = JSON.stringify({
+    comment: 'comment',
+    label: databaseName,
+  });
   http.post(url, body, params).status === 200 ||
     fail(`could not create: ${databaseName}`);
   sleep(1);
