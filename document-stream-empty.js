@@ -1,51 +1,65 @@
-import http from 'k6/http';
-import { check, fail, sleep } from 'k6';
+// Document stream
+// * Use default parameters
+// * Document stream will be empty
+//
+// Look at { scenario:default } under `http_req_duration`.
 
-export const options = {
-  iterations: 20,
-  vus: 1,
+import http from 'k6/http';
+import { fail, sleep } from 'k6';
+
+export let options = {
+  // See <https://community.k6.io/t/ignore-http-calls-made-in-setup-or-teardown-in-results/878/2>
+  // This allows us to look at only the HTTP requests in `default` and ignore
+  // the longer times in `setup`, which involve creating the database.
+  thresholds: {
+    'http_req_duration{scenario:default}': ['max>=0'],
+  },
 };
 
-// `setup` creates a database. `teardown` will delete the database.
-export function setup() {
-  // Use a random string in the database name prefix to avoid clashing with
-  // pre-existing database names.
-  const databaseName = `database-${Math.random().toString(36).substring(2)}`;
-
-  // Create the database
-  const body = { comment: 'New database', label: databaseName };
-  const params = { headers: { 'Content-Type': 'application/json' } };
-
-  const response =
-    http.post(
-      `http://admin:root@127.0.0.1:6363/api/db/admin/${databaseName}`,
-      JSON.stringify(body), params);
-  if (response.status !== 200) {
-    fail('could not create database');
-  }
-
-  return {
-    databaseName: databaseName,
-  };
+function databaseNameOfIter(data, iter) {
+  return `${data.databaseNamePrefix}-${iter}`;
 }
 
-// `default` gets the document list with the default parameters.
-export default function (data) {
-  const response =
-    http.get(`http://admin:root@127.0.0.1:6363/api/document/admin/${data.databaseName}`);
-  check(response, {
-    'status is 200': (r) => r.status === 200,
-  });
+// setup:
+// 1. Define a unique database name prefix to avoid name clashes.
+// 2. Create the databases for all iterations.
+export function setup() {
+  const data = {
+    databaseNamePrefix: `database-${Math.random().toString(36).substring(2)}`,
+  };
 
+  for (let iter = 0; iter < (options.iterations || 1); iter++) {
+    const databaseName = databaseNameOfIter(data, iter);
+    const url = `http://admin:root@127.0.0.1:6363/api/db/admin/${databaseName}`;
+    const body = JSON.stringify({
+      comment: 'comment',
+      label: databaseName,
+    });
+    const params = { headers: { 'Content-Type': 'application/json' } };
+    http.post(url, body, params).status === 200 ||
+      fail(`could not create: ${databaseName}`);
+  }
+
+  return data;
+}
+
+// default:
+// 1. Get the document stream with the default parameters.
+export default function (data) {
+  const databaseName = databaseNameOfIter(data, __ITER);
+  const url = `http://admin:root@127.0.0.1:6363/api/document/admin/${databaseName}`;
+  http.get(url).status === 200 ||
+    fail(`could not get document stream: ${databaseName}`);
   sleep(1);
 }
 
-// `teardown` deletes the database created by `setup`.
+// teardown:
+// 1. Delete the databases for all iterations.
 export function teardown(data) {
-  // Delete the database
-  const response =
-    http.del(`http://admin:root@127.0.0.1:6363/api/db/admin/${data.databaseName}`);
-  if (response.status !== 200) {
-    fail('could not delete database');
+  for (let iter = 0; iter < (options.iterations || 1); iter++) {
+    const databaseName = databaseNameOfIter(data, iter);
+    const url = `http://admin:root@127.0.0.1:6363/api/db/admin/${databaseName}`;
+    http.del(url).status === 200 ||
+      fail(`could not delete: ${databaseName}`);
   }
 }
