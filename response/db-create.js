@@ -5,6 +5,7 @@
 
 import http from 'k6/http';
 import { fail, sleep } from 'k6';
+import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
 
 export let options = {
   // See <https://community.k6.io/t/ignore-http-calls-made-in-setup-or-teardown-in-results/878/2>
@@ -52,4 +53,13 @@ export function teardown(data) {
     http.del(url).status === 200 ||
       fail(`could not delete: ${databaseName}`);
   }
+}
+
+export function handleSummary(data) {
+  data.metrics = {
+    http_req_duration: data.metrics['http_req_duration{scenario:default}']
+  };
+  return {
+    stdout: textSummary(data, { enableColors: true })
+  };
 }
