@@ -1,0 +1,26 @@
+{
+  "name": "terminusdb-k6-lab",
+  "version": "0.0.1",
+  "description": "k6 experiments with TerminusDB",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.31.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
+  },
+  "scripts": {
+    "lint": "eslint --fix ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terminusdb-labs/terminusdb-k6-lab.git"
+  },
+  "author": "Sean Leather <sean@terminusdb.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/terminusdb-labs/terminusdb-k6-lab/issues"
+  },
+  "homepage": "https://github.com/terminusdb-labs/terminusdb-k6-lab#readme"
+}

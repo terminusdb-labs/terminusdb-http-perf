@@ -83,6 +83,24 @@ time from the initiation of the request to the receipt of the complete response.
 Useful numbers include the average (`avg`), median (`med`), and 90th percentile
 (`p(90)`).
 
+## Development
+
+### Linting and Formatting JavaScript code
+
+Before you can lint and format the JavaScript code, install [Node.js][] and run
+this in the top-level directory of the repository to install [ESLint][] in the
+`node_modules/` directory:
+
+```
+npm install
+```
+
+To lint and format, run ESLint with:
+
+```
+npm run lint
+```
+
 
 [`k6`]: https://k6.io/
 [`response/`]: ./response
@@ -90,3 +108,5 @@ Useful numbers include the average (`avg`), median (`med`), and 90th percentile
 [iteration]: https://k6.io/docs/using-k6/options/#iterations
 [shared]: https://k6.io/docs/using-k6/scenarios/executors/shared-iterations/
 [virtual user]: https://k6.io/docs/using-k6/options/#vus
+[Node.js]: https://nodejs.org/en/
+[ESLint]: https://eslint.org/
