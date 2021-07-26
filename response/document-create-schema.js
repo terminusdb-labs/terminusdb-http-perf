@@ -6,17 +6,9 @@
 
 import http from 'k6/http'
 import { fail, sleep } from 'k6'
-import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js'
-import { assignDatabaseNamePrefix, databaseNameOfIter } from '../lib.js'
+import { assignDefaultScenarioThreshold, assignDatabaseNamePrefix, databaseNameOfIter, handleSummary } from '../lib.js'
 
-export const options = {
-  // See <https://community.k6.io/t/ignore-http-calls-made-in-setup-or-teardown-in-results/878/2>
-  // This allows us to look at only the HTTP requests in `default` and ignore
-  // the longer times in `setup`, which involve creating the database.
-  thresholds: {
-    'http_req_duration{scenario:default}': ['max>=0'],
-  },
-}
+export const options = assignDefaultScenarioThreshold({})
 
 const params = { headers: { 'Content-Type': 'application/json' } }
 
@@ -108,11 +100,6 @@ export function teardown (cfg) {
   }
 }
 
-export function handleSummary (data) {
-  data.metrics = {
-    http_req_duration: data.metrics['http_req_duration{scenario:default}'],
-  }
-  return {
-    stdout: textSummary(data, { enableColors: true }),
-  }
+export {
+  handleSummary,
 }
