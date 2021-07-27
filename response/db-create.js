@@ -1,7 +1,5 @@
 // Database create
 // * Use default parameters
-//
-// Look at { scenario:default } under `http_req_duration`.
 
 import http from 'k6/http'
 import { fail, sleep } from 'k6'
