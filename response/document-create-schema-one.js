@@ -36,55 +36,14 @@ export function setup () {
   return cfg
 }
 
-function toJSONStream (arr) {
-  const result = []
-  for (const obj of arr) {
-    result.push(JSON.stringify(obj))
-  }
-  return result.join('\n')
-}
-
-const bodyDefault = toJSONStream([{
-  '@id': 'Person',
-  '@type': 'Class',
-  name: 'xsd:string',
-  birthdate: 'xsd:date',
-  friends: {
-    '@type': 'Set',
-    '@class': 'Person',
-  },
-}, {
-  '@id': 'Employee',
-  '@type': 'Class',
-  '@inherits': 'Person',
-  staff_number: 'xsd:string',
-  boss: {
-    '@type': 'Optional',
-    '@class': 'Employee',
-  },
-  tasks: {
-    '@type': 'List',
-    '@class': 'Task',
-  },
-}, {
-  '@id': 'Task',
-  '@type': 'Class',
-  name: 'xsd:string',
-}, {
-  '@id': 'Criminal',
-  '@type': 'Class',
-  '@inherits': 'Person',
-  aliases: {
-    '@type': 'List',
-  },
-}])
+const schema = open('../json/schema/one.json')
 
 // default:
 // 1. Create the schema.
 export default function (cfg) {
   const databaseName = databaseNameOfIter(cfg, __ITER)
   const url = `http://admin:root@127.0.0.1:6363/api/document/admin/${databaseName}?graph_type=schema&author=test&message=test`
-  http.post(url, bodyDefault, params).status === 200 ||
+  http.post(url, schema, params).status === 200 ||
     fail(`could not create schema: ${databaseName}`)
   sleep(1)
 }

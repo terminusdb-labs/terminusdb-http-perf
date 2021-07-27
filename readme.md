@@ -85,20 +85,45 @@ Useful numbers include the average (`avg`), median (`med`), and 90th percentile
 
 ## Development
 
-### Linting and Formatting JavaScript code
+### Getting Started
 
-Before you can lint and format the JavaScript code, install [Node.js][] and run
-this in the top-level directory of the repository to install [ESLint][] in the
-`node_modules/` directory:
+To get started working on the JavaScript code, install [Node.js][] and run
+this in the top-level directory of the repository:
 
 ```
 npm install
 ```
 
-To lint and format, run ESLint with:
+This creates a `node_modules/` directory and populates it with all of the
+libraries and executables needed for development.
+
+### Linting and Formatting JavaScript code
+
+To lint and format JavaScript code, run [ESLint][] with:
 
 ```
 npm run lint
+```
+
+### JSON Files
+
+All user-created [JSON][] files should go into the [`json/`][] directory and
+have the extension `.json`. That directory also contains an [NDJSON][]
+(newline-delimited JSON) file for each JSON file. The JSON file is there to
+support easy editing. The NDJSON files are used by the `k6` scripts.
+
+After you add or edit a JSON file, run the following script to synchronize the
+JSON and NDJSON file pairs:
+
+```
+npm run json
+```
+
+Don't forget to add any new or updated `.json` and `.ndjson` files in the
+`json/` directory:
+
+```
+git add json
 ```
 
 
@@ -110,3 +135,6 @@ npm run lint
 [virtual user]: https://k6.io/docs/using-k6/options/#vus
 [Node.js]: https://nodejs.org/en/
 [ESLint]: https://eslint.org/
+[JSON]: https://en.wikipedia.org/wiki/JSON
+[`json/`]: ./json
+[NDJSON]: https://en.wikipedia.org/wiki/JSON_streaming

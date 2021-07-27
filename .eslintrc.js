@@ -6,6 +6,7 @@ module.exports = {
     'standard',
   ],
   globals: {
+    open: 'readonly',
     __ITER: 'readonly',
   },
   parserOptions: {

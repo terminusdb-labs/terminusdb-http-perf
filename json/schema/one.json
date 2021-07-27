@@ -1,0 +1,11 @@
+{
+  "@id": "One",
+  "@type": "Class",
+  "@key": {
+    "@type": "Lexical",
+    "@fields": [
+      "field"
+    ]
+  },
+  "field": "xsd:string"
+}
