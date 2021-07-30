@@ -1,9 +1,19 @@
-# HTTP testing with TerminusDB
+# HTTP Performance Testing for TerminusDB
 
-This repository contains experimental scripts for HTTP testing using [`k6`][].
-All scripts assume that `terminusdb` is running at `http://127.0.0.1:6363`.
+This repository contains scripts for HTTP performance testing [TerminusDB][]
+using [`k6`][].
 
-## Running a script
+## Getting Started
+
+These instructions will get you started using the scripts in this repository for
+HTTP performance testing TerminusDB. See [below](#development) for instructions
+on getting started with developing the scripts.
+
+First, [install `k6`][] and [install TerminusDB][]. Then, make sure the
+`terminusdb` server is running at `http://127.0.0.1:6363`. Now, continue to the
+next section for how to run the scripts.
+
+## Running a Script
 
 To run the script `response/ok.js`:
 
@@ -21,25 +31,23 @@ To run the script with 5 iterations:
 k6 run --iterations 5 response/ok.js
 # or:
 k6 run -i 5 response/ok.js
+# or, leaving no space after the short flag:
+k6 run -i5 response/ok.js
 ```
 
-To run it with 5 iterations [shared] by 5 VUs:
+To run it with 5 iterations [shared][] by 5 VUs:
 
 ```sh
 k6 run --iterations 5 --vus 5 response/ok.js
-# or:
-k6 run -i 5 -u 5 response/ok.js
-# or, leaving no space after the short flag:
-k6 run -i5 -u5 response/ok.js
 ```
 
 To output HTTP requests and responses, use `--http-debug=full`.
 
-## Response time testing
+## Response Time Testing
 
 The scripts in [`response/`][] are for response time testing. That is, we use
-them to test how long a particular route takes from receiving an HTTP request to
-sending the HTTP response.
+them to test how long a particular route takes from sending an HTTP request to
+receiving the HTTP response.
 
 These scripts are designed to be run with an arbitrary number of iterations but
 _only one virtual user_. If you run them with more than one VU, the response
@@ -52,7 +60,7 @@ a sufficiently high number of iterations to give a good average approximation of
 the time:
 
 ```sh
-k6 run -i20 response/ok.js
+k6 run --iterations 20 response/ok.js
 ```
 
 You will get output, called the [end-of-test summary report][], that looks
@@ -70,18 +78,38 @@ something like this:
      output: -
 
   scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
-           * default: 1 iterations for each of 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+           * default: 20 iterations shared among 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
 
 
-running (00m01.0s), 0/1 VUs, 1 complete and 0 interrupted iterations
-default ✓ [======================================] 1 VUs  00m01.0s/10m0s  1/1 iters, 1 per VU
-     http_req_duration...: avg=3.23ms min=3.23ms med=3.23ms max=3.23ms p(90)=3.23ms p(95)=3.23ms
+running (00m20.7s), 0/1 VUs, 20 complete and 0 interrupted iterations
+default ✓ [======================================] 1 VUs  00m20.7s/10m0s  20/20 shared iters
+     http_req_duration...: avg=32.69ms min=26.95ms med=30.18ms max=70.2ms p(90)=33.52ms p(95)=37.72ms
 ```
 
 Then, look at the `http_req_duration` row. This provides statistics on the total
 time from the initiation of the request to the receipt of the complete response.
 Useful numbers include the average (`avg`), median (`med`), and 90th percentile
 (`p(90)`).
+
+## Benchmarking and Generating Metrics
+
+For this, you will need [`jq`][], which is used to transform the output from
+`k6` into input for our continuous benchmarking GitHub Action. So, first,
+[install `jq`][] and make sure it's available in your `$PATH`.
+
+To run the benchmark script, which includes all the routes of interest, and
+create a [JSON results file][]:
+
+```sh
+k6 run --iterations 20 --out json=results.json response/all.js
+```
+
+To create another JSON file with aggregate metrics from the above output, run
+the [`./metrics.sh`][] script:
+
+```sh
+./metrics.sh results.json > metrics.json
+```
 
 ## Development
 
@@ -127,12 +155,19 @@ git add json
 ```
 
 
+[TerminusDB]: https://terminusdb.com/
 [`k6`]: https://k6.io/
+[install `k6`]: https://k6.io/docs/getting-started/installation/
+[install TerminusDB]: https://terminusdb.com/hub/download
+[install `jq`]: https://stedolan.github.io/jq/download/
 [`response/`]: ./response
 [end-of-test summary report]: https://k6.io/docs/getting-started/results-output/#end-of-test-summary-report
 [iteration]: https://k6.io/docs/using-k6/options/#iterations
 [shared]: https://k6.io/docs/using-k6/scenarios/executors/shared-iterations/
 [virtual user]: https://k6.io/docs/using-k6/options/#vus
+[`jq`]: https://stedolan.github.io/jq/
+[JSON results file]: https://k6.io/docs/results-visualization/json/
+[`./metrics.sh`]: ./metrics.sh
 [Node.js]: https://nodejs.org/en/
 [ESLint]: https://eslint.org/
 [JSON]: https://en.wikipedia.org/wiki/JSON
