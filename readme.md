@@ -1,4 +1,4 @@
-# HTTP Performance Testing for TerminusDB
+# TerminusDB HTTP Performance Testing
 
 This repository contains scripts for HTTP performance testing [TerminusDB][]
 using [`k6`][].
