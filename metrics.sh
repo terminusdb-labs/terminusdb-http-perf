@@ -12,7 +12,7 @@ read -d '' filter_metrics << EOF
 . |
 select(.type == "Point" and .metric == "http_req_duration") |
 {
-  id: (.data.tags.method + ":" + .data.tags.api),
+  id: (.data.tags.api + ":" + .data.tags.method),
   http_req_duration: .data.value
 }
 EOF
@@ -20,7 +20,7 @@ EOF
 # Definitions:
 #
 # percentile: Calculate percentile according to NIST:
-#   - `p`th percent of `n` values in an array are less than the result
+#   - `p`th percent of `n` input values are <= the calculated result
 #   - See <https://www.itl.nist.gov/div898/handbook/prc/section2/prc262.htm>
 #
 # round3: round to 3 decimal places
@@ -52,23 +52,20 @@ def round3: . * 1000 | round | . / 1000 ;
 . |
 # Group the common id's in arrays
 group_by(.id) |
-# Replace each group with one object for that id and one set of metrics
-map({
-  # Use the first id in the (non-empty) group
-  id: .[0].id,
-  # Aggregate the metrics of the group in one object
-  http_req_duration: (
-    map(.http_req_duration) |
-    length as \$len |
-    sort |
-    {
-      med: (. | percentile(50; \$len) | round3),
-      "p(90)": (. | percentile(90; \$len) | round3),
-      min: (.[0] | round3),
-      max: (.[-1 | round3])
-    }
-  )
-})
+# Replace each group with an object with an aggregate metric
+map(
+  # Use the first id in the (non-empty) group for the metric name
+  (.[0].id + ":http_req_duration") as \$name_prefix |
+  map(.http_req_duration) |
+  length as \$len |
+  sort |
+  {
+    name: (\$name_prefix + ":p(90)"),
+    value: (. | percentile(90; \$len) | round3),
+    unit: "ms"
+    # TODO: range and extra properties
+  }
+)
 EOF
 
 jq --compact-output "$filter_metrics" "$file" |  \
