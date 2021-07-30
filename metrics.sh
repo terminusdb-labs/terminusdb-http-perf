@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Exit on error
+set -e
+
 if [ $# -ne 1 ]; then
   echo "$0: expected single argument: a JSON file name"
   exit 1
@@ -68,5 +71,5 @@ map(
 )
 EOF
 
-jq --compact-output "$filter_metrics" "$file" |  \
-jq --slurp "$group_by_id_and_calculate_stats"
+jq --exit-status --compact-output "$filter_metrics" "$file" |  \
+jq --exit-status --slurp "$group_by_id_and_calculate_stats"
