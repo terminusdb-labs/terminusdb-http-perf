@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-# Exit on error
-set -e
-
+# Exit with error if the number of arguments is not equal to 1
 if [ $# -ne 1 ]; then
   echo "$0: expected single argument: a JSON file name"
   exit 1
 fi
 
+# Save the file name
 file="$1"
 
 # shellcheck disable=SC2162
@@ -70,6 +69,9 @@ map(
   }
 )
 EOF
+
+# Exit on error
+set -e
 
 jq --exit-status --compact-output "$filter_metrics" "$file" |  \
 jq --exit-status --slurp "$group_by_id_and_calculate_stats"
