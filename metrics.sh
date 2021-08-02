@@ -70,8 +70,10 @@ map(
 )
 EOF
 
-# Exit on error
+# Exit on first error
 set -e
 
+# First, filter the input by selecting only the `http_req_duration` data points.
+# Then, transform those data points into an array of aggregate results.
 jq --exit-status --compact-output "$filter_metrics" "$file" |  \
 jq --exit-status --slurp "$group_by_id_and_calculate_stats"
