@@ -10,7 +10,7 @@ fi
 file="$1"
 
 # shellcheck disable=SC2162
-read -d '' filter_metrics << EOF
+read -d '' filter << EOF
 . |
 select(.type == "Point" and .metric == "http_req_duration") |
 {
@@ -28,7 +28,7 @@ EOF
 # round3: round to 3 decimal places
 
 # shellcheck disable=SC2162
-read -d '' group_by_id_and_calculate_stats << EOF
+read -d '' aggregate << EOF
 def percentile(\$p; \$n):
   if \$p <= 0 then
     .[0]
@@ -75,5 +75,5 @@ set -e
 
 # First, filter the input by selecting only the `http_req_duration` data points.
 # Then, transform those data points into an array of aggregate results.
-jq --exit-status --compact-output "$filter_metrics" "$file" |  \
-jq --exit-status --slurp "$group_by_id_and_calculate_stats"
+jq --exit-status --compact-output "$filter" "$file" |  \
+jq --exit-status --compact-output --slurp "$aggregate"

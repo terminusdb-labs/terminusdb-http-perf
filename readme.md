@@ -104,11 +104,18 @@ create a [JSON results file][]:
 k6 run --iterations 20 --out json=results.json response/all.js
 ```
 
-To create another JSON file with aggregate metrics from the above output, run
+To create another JSON file with aggregate results from the above output, run
 the [`./metrics.sh`][] script:
 
 ```sh
 ./metrics.sh results.json > metrics.json
+```
+
+To view the aggregate results in the terminal, run the same script with the
+output beautified by `jq`:
+
+```sh
+./metrics.sh results.json | jq '.'
 ```
 
 ## Development
