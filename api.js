@@ -1,11 +1,12 @@
 import { Httpx } from 'https://jslib.k6.io/httpx/0.0.5/index.js'
 import { databaseNameOfIter } from './lib.js'
 
-const proto = 'http'
-const user = 'admin'
-const password = 'root'
-const host = '127.0.0.1'
-const port = '6363'
+// Connection parameters with environment variables and defaults.
+const proto = __ENV.TERMINUSDB_SERVER_PROTO || 'http'
+const host = __ENV.TERMINUSDB_SERVER_HOST || 'localhost'
+const port = __ENV.TERMINUSDB_SERVER_PORT || '6363'
+const user = __ENV.TERMINUSDB_SERVER_USER || 'admin'
+const pass = __ENV.TERMINUSDB_SERVER_PASS || 'root'
 
 const successStatus = 200
 
@@ -24,7 +25,7 @@ function uniquePath (path) {
 class Http extends Httpx {
   constructor () {
     super({
-      baseURL: `${proto}://${user}:${password}@${host}:${port}`,
+      baseURL: `${proto}://${user}:${pass}@${host}:${port}`,
       headers: {
         'User-Agent': 'terminusdb-k6',
       },

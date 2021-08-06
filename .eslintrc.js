@@ -7,6 +7,7 @@ module.exports = {
   ],
   globals: {
     open: 'readonly',
+    __ENV: 'readonly',
     __ITER: 'readonly',
   },
   parserOptions: {
