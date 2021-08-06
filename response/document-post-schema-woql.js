@@ -21,7 +21,7 @@ const schema = open('../json/schema/woql.json')
 // default:
 // 1. Create the schema.
 export default function (cfg) {
-  api.documentCreateSchema(cfg, __ITER, schema)
+  api.documentPostSchema(cfg, __ITER, schema)
   sleep(1)
 }
 

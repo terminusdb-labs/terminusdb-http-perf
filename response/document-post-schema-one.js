@@ -16,12 +16,12 @@ export function setup () {
   return cfg
 }
 
-const schema = open('../json/schema/person.json')
+const schema = open('../json/schema/one.json')
 
 // default:
 // 1. Create the schema.
 export default function (cfg) {
-  api.documentCreateSchema(cfg, __ITER, schema)
+  api.documentPostSchema(cfg, __ITER, schema)
   sleep(1)
 }
 

@@ -137,7 +137,7 @@ export function documentStream (cfg, iter, options) {
   http.get(`/api/document/${user}/${databaseNameOfIter(cfg, iter)}`, null, options)
 }
 
-export function documentCreateSchema (cfg, iter, schema, options) {
+export function documentPostSchema (cfg, iter, schema, options) {
   http.post(
     `/api/document/${user}/${databaseNameOfIter(cfg, iter)}?graph_type=schema&author=test&message=test`,
     schema,
