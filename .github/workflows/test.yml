@@ -1,0 +1,29 @@
+name: Test
+on:
+  push:
+  pull_request:
+
+jobs:
+  run-all-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install k6
+        run: |
+          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+          k6 version
+
+      - name: Run server
+        run: docker run --detach --publish 6363:6363 terminusdb/terminusdb-server:dev
+
+      - name: Run scripts
+        run: |
+          for s in $(ls response); do
+            set -x
+            k6 --quiet --no-summary --no-usage-report run --throw response/$s
+            set +x
+          done
