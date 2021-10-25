@@ -16,7 +16,7 @@ export function setup () {
   return cfg
 }
 
-const schema = open('../json/schema/woql.json')
+const schema = open('../json/woql/schema.json')
 
 // default:
 // 1. Create the schema.

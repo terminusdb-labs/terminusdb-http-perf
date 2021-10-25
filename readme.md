@@ -140,28 +140,6 @@ To lint and format JavaScript code, run [ESLint][] with:
 npm run lint
 ```
 
-### JSON Files
-
-All user-created [JSON][] files should go into the [`json/`][] directory and
-have the extension `.json`. That directory also contains an [NDJSON][]
-(newline-delimited JSON) file for each JSON file. The JSON file is there to
-support easy editing. The NDJSON files are used by the `k6` scripts.
-
-After you add or edit a JSON file, run the following script to synchronize the
-JSON and NDJSON file pairs:
-
-```
-npm run json
-```
-
-Don't forget to add any new or updated `.json` and `.ndjson` files in the
-`json/` directory:
-
-```
-git add json
-```
-
-
 [TerminusDB]: https://terminusdb.com/
 [`k6`]: https://k6.io/
 [install `k6`]: https://k6.io/docs/getting-started/installation/
@@ -177,6 +155,3 @@ git add json
 [`./metrics.sh`]: ./metrics.sh
 [Node.js]: https://nodejs.org/en/
 [ESLint]: https://eslint.org/
-[JSON]: https://en.wikipedia.org/wiki/JSON
-[`json/`]: ./json
-[NDJSON]: https://en.wikipedia.org/wiki/JSON_streaming

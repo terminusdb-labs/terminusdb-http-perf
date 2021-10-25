@@ -12,9 +12,9 @@ export function setup () {
   return lib.assignDatabaseNamePrefix({ throw: true })
 }
 
-const schemaOne = open('../json/schema/one.json')
-const schemaPerson = open('../json/schema/person.json')
-const schemaWoql = open('../json/schema/woql.json')
+const schemaOne = open('../json/one/schema.json')
+const schemaPerson = open('../json/person/schema.json')
+const schemaWoql = open('../json/woql/schema.json')
 
 // default:
 export default function (cfg) {
