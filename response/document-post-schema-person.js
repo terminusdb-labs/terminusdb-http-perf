@@ -16,7 +16,7 @@ export function setup () {
   return cfg
 }
 
-const schema = open('../json/schema/person.json')
+const schema = open('../json/person/schema.json')
 
 // default:
 // 1. Create the schema.
