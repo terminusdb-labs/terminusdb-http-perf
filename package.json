@@ -13,6 +13,7 @@
   },
   "scripts": {
     "lint": "eslint --fix ./",
+    "check": "eslint .",
     "json": "node json.js"
   },
   "repository": {
