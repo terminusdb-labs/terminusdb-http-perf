@@ -4,6 +4,8 @@ import * as k6 from 'k6'
 import * as lib from '../lib.js'
 import * as api from '../api.js'
 
+export const options = lib.defaultOptions
+
 // setup:
 // 1. Define a unique database name.
 export function setup () {

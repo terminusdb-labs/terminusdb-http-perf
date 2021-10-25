@@ -1,7 +1,6 @@
 // Ok
 
 import { sleep } from 'k6'
-import { handleSummary } from '../lib.js'
 import * as api from '../api.js'
 
 // default:
@@ -11,6 +10,4 @@ export default function () {
   sleep(1)
 }
 
-export {
-  handleSummary,
-}
+export { handleSummary } from '../lib.js'
