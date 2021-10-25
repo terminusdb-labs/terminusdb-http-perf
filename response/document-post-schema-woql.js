@@ -2,16 +2,16 @@
 // * Use default parameters except for prefixes
 
 import { sleep } from 'k6'
-import { assignDefaultScenarioThreshold, assignDatabaseNamePrefix, handleSummary } from '../lib.js'
+import * as lib from '../lib.js'
 import * as api from '../api.js'
 
-export const options = assignDefaultScenarioThreshold({})
+export const options = lib.assignDefaultScenarioThreshold(lib.defaultOptions)
 
 // setup:
 // 1. Define a unique database name.
 // 2. Create the databases for all iterations.
 export function setup () {
-  const cfg = assignDatabaseNamePrefix({})
+  const cfg = lib.assignDatabaseNamePrefix({})
   api.dbCreateWithPrefixesAllIterations(cfg, options.iterations)
   return cfg
 }
@@ -31,6 +31,4 @@ export function teardown (cfg) {
   api.dbDeleteAllIterations(cfg, options.iterations)
 }
 
-export {
-  handleSummary,
-}
+export { handleSummary } from '../lib.js'

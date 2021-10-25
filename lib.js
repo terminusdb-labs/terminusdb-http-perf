@@ -20,17 +20,27 @@ export function databaseNameOfIter (cfg, iter) {
   return `${cfg.databaseNamePrefix}-${iter}`
 }
 
+// This is the default set of options for all scripts.
+export const defaultOptions = {
+  // These are criteria specifying expectations of the system under test.
+  thresholds: {
+    // HTTP requests should never fail. If they do, abort.
+    http_req_failed: [{ threshold: 'rate == 0', abortOnFail: true }],
+  },
+}
+
 // assignDefaultScenarioThreshold:
 // - See <https://community.k6.io/t/ignore-http-calls-made-in-setup-or-teardown-in-results/878/2>
 //   This allows us to look at only the HTTP requests in `default` and ignore
 //   the longer times in `setup`, which involve creating the database.
 // - Use this in `options`.
 export function assignDefaultScenarioThreshold (options) {
-  return Object.assign(options, {
-    thresholds: {
-      'http_req_duration{scenario:default}': ['max>=0'],
-    },
+  options = options || {}
+  options.thresholds = options.thresholds || {}
+  Object.assign(options.thresholds, {
+    'http_req_duration{scenario:default}': ['max>=0'],
   })
+  return options
 }
 
 // handleSummary:

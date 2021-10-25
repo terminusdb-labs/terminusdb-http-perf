@@ -2,15 +2,15 @@
 // * Use default parameters
 
 import { sleep } from 'k6'
-import { assignDatabaseNamePrefix, assignDefaultScenarioThreshold, handleSummary } from '../lib.js'
+import * as lib from '../lib.js'
 import * as api from '../api.js'
 
-export const options = assignDefaultScenarioThreshold({})
+export const options = lib.assignDefaultScenarioThreshold(lib.defaultOptions)
 
 // setup:
 // 1. Define a unique database name.
 export function setup () {
-  return assignDatabaseNamePrefix({})
+  return lib.assignDatabaseNamePrefix({})
 }
 
 // default:
@@ -26,6 +26,4 @@ export function teardown (cfg) {
   api.dbDeleteAllIterations(cfg, options.iterations)
 }
 
-export {
-  handleSummary,
-}
+export { handleSummary } from '../lib.js'
