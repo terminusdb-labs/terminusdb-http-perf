@@ -525,36 +525,6 @@
   }
 }
 {
-  "@id": "AddData",
-  "@type": "Class",
-  "@key": {
-    "@type": "ValueHash"
-  },
-  "@inherits": "Query",
-  "subject": "NodeValue",
-  "predicate": "NodeValue",
-  "object": "DataValue",
-  "graph": {
-    "@type": "Optional",
-    "@class": "xsd:string"
-  }
-}
-{
-  "@id": "AddedData",
-  "@type": "Class",
-  "@key": {
-    "@type": "ValueHash"
-  },
-  "@inherits": "Query",
-  "subject": "NodeValue",
-  "predicate": "NodeValue",
-  "object": "DataValue",
-  "graph": {
-    "@type": "Optional",
-    "@class": "xsd:string"
-  }
-}
-{
   "@id": "DeleteLink",
   "@type": "Class",
   "@key": {
