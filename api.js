@@ -32,6 +32,15 @@ class Http extends Httpx {
     })
   }
 
+  checkStatus (url, status, response) {
+    if (response.status !== status) {
+      const msg = "expected status '" + status + "', got '" +
+        response.status + "'\n<" + this.baseURL + url + '>\n' +
+        JSON.stringify(JSON.parse(response.body), null, 2)
+      throw new Error(msg)
+    }
+  }
+
   get (url, body, options) {
     options = options || {}
     const status = extractProperty(options, 'status') || successStatus
@@ -39,9 +48,7 @@ class Http extends Httpx {
     options = Object.assign({ tags: { api: `${uniquePath(url)}:${api}` } }, options)
 
     const response = super.get(url, body, options)
-    if (response.status !== status) {
-      throw new Error(`expected status ${response.status}, got ${status}: ${this.baseURL}${url}`)
-    }
+    this.checkStatus(url, status, response)
     return response
   }
 
@@ -53,9 +60,7 @@ class Http extends Httpx {
 
     super.addHeader('Content-Type', 'application/json')
     const response = super.post(url, body, options)
-    if (response.status !== status) {
-      throw new Error(`expected status ${response.status}, got ${status}: ${this.baseURL}${url}`)
-    }
+    this.checkStatus(url, status, response)
     super.clearHeader('Content-Type')
     return response
   }
@@ -67,9 +72,7 @@ class Http extends Httpx {
     options = Object.assign({ tags: { api: `${uniquePath(url)}:${api}` } }, options)
 
     const response = super.delete(url, null, options)
-    if (response.status !== status) {
-      throw new Error(`expected status ${response.status}, got ${status}: ${this.baseURL}${url}`)
-    }
+    this.checkStatus(url, status, response)
     return response
   }
 }
