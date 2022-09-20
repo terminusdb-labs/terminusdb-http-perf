@@ -33,7 +33,7 @@ jobs:
         run: |
           for s in $(ls response); do
             set -x
-            k6 --quiet --no-summary --no-usage-report run --throw --out --http-debug=full json=data-points.json response/$s
+            k6 --quiet --http-debug=full --no-summary --no-usage-report run --throw --out json=data-points.json response/$s
             ./metrics.sh data-points.json > results.json
             set +x
           done
