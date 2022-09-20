@@ -27,7 +27,7 @@ jobs:
           k6 version
 
       - name: Run server
-        run: docker run --detach --publish 127.0.0.1:6363:6363 terminusdb/terminusdb-server:dev
+        run: docker run --detach --publish 127.0.0.1:6363:6363 terminusdb/terminusdb-server:dev && sleep 3 && docker ps
 
       - name: Run scripts
         run: |
