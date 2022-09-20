@@ -27,13 +27,13 @@ jobs:
           k6 version
 
       - name: Run server
-        run: docker run --detach --publish 6363:6363 terminusdb/terminusdb-server:dev
+        run: docker run --detach --publish 127.0.0.1:6363:6363 terminusdb/terminusdb-server:dev && sleep 3 && docker ps
 
       - name: Run scripts
         run: |
           for s in $(ls response); do
             set -x
-            k6 --quiet --no-summary --no-usage-report run --throw --out json=data-points.json response/$s
+            k6 --http-debug=full --no-summary --no-usage-report run --throw --out json=data-points.json response/$s
             ./metrics.sh data-points.json > results.json
             set +x
           done

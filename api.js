@@ -3,7 +3,7 @@ import { databaseNameOfIter } from './lib.js'
 
 // Connection parameters with environment variables and defaults.
 const proto = __ENV.TERMINUSDB_SERVER_PROTO || 'http'
-const host = __ENV.TERMINUSDB_SERVER_HOST || 'localhost'
+const host = __ENV.TERMINUSDB_SERVER_HOST || '127.0.0.1'
 const port = __ENV.TERMINUSDB_SERVER_PORT || '6363'
 const user = __ENV.TERMINUSDB_SERVER_USER || 'admin'
 const pass = __ENV.TERMINUSDB_SERVER_PASS || 'root'
